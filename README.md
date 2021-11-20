@@ -4,7 +4,7 @@ Tool to scrape startupschool.org founder matching (because I'd prefer to read th
 
 ## Usage
 
-* Create a file .credentials.json with the following:
+* Create a file `.credentials.json` with the following:
 
     ```json
     {
