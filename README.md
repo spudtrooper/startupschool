@@ -4,7 +4,7 @@ Tool to scrape startupschool.org founder matching (because I'd prefer to read th
 
 ## Usage
 
-* Create a file `.credentials.json` with the following:
+1. Create a file `.credentials.json` with the following:
 
     ```json
     {
@@ -13,19 +13,19 @@ Tool to scrape startupschool.org founder matching (because I'd prefer to read th
     }
     ```
 
-* Collect some candidates:
+2. Collect some candidates:
 
     ```bash
     ./scripts/main.sh [--limit <N>]
     ```
 
-* Create a report
+3. Create a report
 
     ```bash
     ./scripts/report.sh
     ```
 
-* Check out the report
+4. Check out the report
 
     ```bash
     open data/html/index.html
