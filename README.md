@@ -1,6 +1,6 @@
 # startupschool
 
-Tool to scrape startupschool.org founder matching (because I'd prefer to read them in batch)
+Tool to scrape startupschool.org founder matching (because I'd prefer to read them in batch & offline)
 
 ## Usage
 
