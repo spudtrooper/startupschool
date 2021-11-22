@@ -35,7 +35,7 @@ func Report() error {
 	}
 	var rows []html.TableRowData
 	for _, c := range cands {
-		companyHTML := linkify(c.CompanyText)
+		companyHTML := html.Linkify(c.CompanyText)
 		row := html.TableRowData{
 			fmt.Sprintf(`<a href="%s" target="_"><img style="max-width:100px" src="%s"/></a>`, c.ProfileURI, c.ProfileURI),
 			fmt.Sprintf(`<a href="%s" target="_">%s</a>`, c.URI, c.Name),

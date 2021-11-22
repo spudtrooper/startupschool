@@ -38,8 +38,8 @@ github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
 github.com/rivo/duplo v0.0.0-20180323201418-c4ec823d58cd/go.mod h1:gw8DEItjXFxacZzluOv7azm5G22Vvx/OBZb7Wqoqp9M=
-github.com/spudtrooper/goutil v0.1.10 h1:94MZmSC1xdwE/+zJfv5rBxtFlrAgBoBbgngAOhX03x8=
-github.com/spudtrooper/goutil v0.1.10/go.mod h1:VTWdbHleH5kZRifa7m1iJTg/3v1BZMDxdCmG2tiKodc=
+github.com/spudtrooper/goutil v0.1.11 h1:uhhVVEYwEjGDDxtJkUk8wlFv9+StXXmi6P5QGo9VG/Q=
+github.com/spudtrooper/goutil v0.1.11/go.mod h1:VTWdbHleH5kZRifa7m1iJTg/3v1BZMDxdCmG2tiKodc=
 github.com/tebeka/selenium v0.9.9 h1:cNziB+etNgyH/7KlNI7RMC1ua5aH1+5wUlFQyzeMh+w=
 github.com/tebeka/selenium v0.9.9/go.mod h1:5Fr8+pUvU6B1OiPfkdCKdXZyr5znvVkxuPd0NOdZCQc=
 github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 h1:0sw0nJM544SpsihWx1bkXdYLQDlzRflMgFJQ4Yih9ts=

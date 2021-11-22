@@ -3,7 +3,7 @@ module github.com/spudtrooper/startupschool
 go 1.17
 
 require (
-	github.com/spudtrooper/goutil v0.1.10
+	github.com/spudtrooper/goutil v0.1.11
 	github.com/tebeka/selenium v0.9.9
 )
 
