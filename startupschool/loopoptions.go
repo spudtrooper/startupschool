@@ -1,25 +1,11 @@
 package startupschool
 
-// ~/go/bin/genopts -opt_type=LoopOption --prefix=Loop seleniumVerbose seleniumHead limit:int
+// genopts --opt_type=LoopOption --prefix=Loop --outfile=startupschool/loopoptions.go 'limit:int'
 
 type LoopOption func(*loopOptionImpl)
 
 type LoopOptions interface {
-	SeleniumVerbose() bool
-	SeleniumHead() bool
 	Limit() int
-}
-
-func LoopSeleniumVerbose(seleniumVerbose bool) LoopOption {
-	return func(opts *loopOptionImpl) {
-		opts.seleniumVerbose = seleniumVerbose
-	}
-}
-
-func LoopSeleniumHead(seleniumHead bool) LoopOption {
-	return func(opts *loopOptionImpl) {
-		opts.seleniumHead = seleniumHead
-	}
 }
 
 func LoopLimit(limit int) LoopOption {
@@ -29,19 +15,19 @@ func LoopLimit(limit int) LoopOption {
 }
 
 type loopOptionImpl struct {
-	seleniumVerbose bool
-	seleniumHead    bool
-	limit           int
+	limit int
 }
 
-func (l *loopOptionImpl) SeleniumVerbose() bool { return l.seleniumVerbose }
-func (l *loopOptionImpl) SeleniumHead() bool    { return l.seleniumHead }
-func (l *loopOptionImpl) Limit() int            { return l.limit }
+func (l *loopOptionImpl) Limit() int { return l.limit }
 
-func makeLoopOptionImpl(opts ...LoopOption) loopOptionImpl {
-	var res loopOptionImpl
+func makeLoopOptionImpl(opts ...LoopOption) *loopOptionImpl {
+	res := &loopOptionImpl{}
 	for _, opt := range opts {
-		opt(&res)
+		opt(res)
 	}
 	return res
+}
+
+func MakeLoopOptions(opts ...LoopOption) LoopOptions {
+	return makeLoopOptionImpl(opts...)
 }

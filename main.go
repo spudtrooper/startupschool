@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"strings"
 
 	"github.com/spudtrooper/startupschool/startupschool"
 )
@@ -10,7 +11,10 @@ var (
 	credentialsFile = flag.String("credentials_file", ".credentials.json", "File with credentials")
 	seleniumVerbose = flag.Bool("selenium_verbose", false, "verbose selenium logging")
 	seleniumHead    = flag.Bool("selenium_head", false, "Take screenshots withOUT headless chrome")
-	limit           = flag.Int("limit", 0, "max number of times to check next candidate")
+	loop            = flag.Int("loop", 0, "max number of times to check next candidate")
+	uris            = flag.String("uris", "", "comma-delimited list of URIs to search")
+	data            = flag.String("data", "data", "directory to store data")
+	backfill        = flag.Bool("backfill", false, "Backfill existing entries")
 )
 
 func realMain() error {
@@ -19,11 +23,30 @@ func realMain() error {
 		return err
 	}
 	bot := startupschool.MakeBot(*creds)
-	if err := bot.Loop(
-		startupschool.LoopSeleniumVerbose(*seleniumVerbose),
-		startupschool.LoopSeleniumHead(*seleniumHead),
-		startupschool.LoopLimit(*limit)); err != nil {
+	cancel, err := bot.Login(
+		startupschool.LoginSeleniumVerbose(*seleniumVerbose),
+		startupschool.LoginSeleniumHead(*seleniumHead),
+		startupschool.LoginData(*data))
+	if err != nil {
 		return err
+	}
+	defer cancel()
+
+	if *uris != "" {
+		uris := strings.Split(*uris, ",")
+		if err := bot.SearchURIs(uris); err != nil {
+			return err
+		}
+	}
+	if *loop > 0 {
+		if err := bot.Loop(startupschool.LoopLimit(*loop)); err != nil {
+			return err
+		}
+	}
+	if *backfill {
+		if err := bot.Backfill(); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -1,13 +1,10 @@
 package startupschool
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"path"
-	"path/filepath"
 	"sort"
 
 	"github.com/spudtrooper/goutil/html"
@@ -20,30 +17,9 @@ func Report() error {
 	}
 	dir := d.Dir()
 
-	var files []string
-	if err := filepath.Walk(dir, func(f string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() && filepath.Ext(f) == ".json" {
-			files = append(files, f)
-		}
-		return nil
-	}); err != nil {
+	cands, err := findExistingCandidates(dir)
+	if err != nil {
 		return err
-	}
-
-	var cands []candidate
-	for _, f := range files {
-		var c candidate
-		b, err := ioutil.ReadFile(f)
-		if err != nil {
-			return err
-		}
-		if err := json.Unmarshal(b, &c); err != nil {
-			return err
-		}
-		cands = append(cands, c)
 	}
 
 	sort.Slice(cands, func(a, b int) bool {
@@ -51,14 +27,19 @@ func Report() error {
 		return ca.Name > cb.Name
 	})
 	head := html.TableRowData{
+		"IMAGE",
 		"NAME",
+		"COMPANY",
 		"INTRO",
 		"LINKEDIN",
 	}
 	var rows []html.TableRowData
 	for _, c := range cands {
+		companyHTML := linkify(c.CompanyText)
 		row := html.TableRowData{
+			fmt.Sprintf(`<a href="%s" target="_"><img style="max-width:100px" src="%s"/></a>`, c.ProfileURI, c.ProfileURI),
 			fmt.Sprintf(`<a href="%s" target="_">%s</a>`, c.URI, c.Name),
+			companyHTML,
 			c.Intro,
 			fmt.Sprintf(`<a href="%s" target="_">LinkedIn</a>`, c.LinkedInUri),
 		}

@@ -3,13 +3,22 @@ package startupschool
 import (
 	"encoding/json"
 	"io/ioutil"
+
+	"github.com/tebeka/selenium"
 )
 
 type candidate struct {
-	URI         string
-	Name        string
-	LinkedInUri string
-	Intro       string
+	URI          string
+	ProfileURI   string
+	Name         string
+	LinkedInUri  string
+	Intro        string
+	CompanyLinks []link
+	CompanyText  string
+}
+
+type link struct {
+	URI, Text string
 }
 
 type Credentials struct {
@@ -31,8 +40,10 @@ func ReadCredentials(f string) (*Credentials, error) {
 
 type bot struct {
 	creds Credentials
+	wd    selenium.WebDriver
+	d     *data
 }
 
 func MakeBot(creds Credentials) *bot {
-	return &bot{creds}
+	return &bot{creds: creds}
 }
