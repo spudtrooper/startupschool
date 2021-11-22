@@ -15,6 +15,7 @@ var (
 	uris            = flag.String("uris", "", "comma-delimited list of URIs to search")
 	data            = flag.String("data", "data", "directory to store data")
 	backfill        = flag.Bool("backfill", false, "Backfill existing entries")
+	pause           = flag.Duration("pause", 0, "pause time between requests")
 )
 
 func realMain() error {
@@ -34,17 +35,21 @@ func realMain() error {
 
 	if *uris != "" {
 		uris := strings.Split(*uris, ",")
-		if err := bot.SearchURIs(uris); err != nil {
+		if err := bot.SearchURIs(uris,
+			startupschool.SearchURIsPause(*pause)); err != nil {
 			return err
 		}
 	}
 	if *loop > 0 {
-		if err := bot.Loop(startupschool.LoopLimit(*loop)); err != nil {
+		if err := bot.Loop(
+			startupschool.LoopLimit(*loop),
+			startupschool.LoopPause(*pause)); err != nil {
 			return err
 		}
 	}
 	if *backfill {
-		if err := bot.Backfill(); err != nil {
+		if err := bot.Backfill(
+			startupschool.BackfillPause(*pause)); err != nil {
 			return err
 		}
 	}

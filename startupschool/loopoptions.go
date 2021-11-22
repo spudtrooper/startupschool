@@ -1,11 +1,14 @@
 package startupschool
 
-// genopts --opt_type=LoopOption --prefix=Loop --outfile=startupschool/loopoptions.go 'limit:int'
+import "time"
+
+// genopts --opt_type=LoopOption --prefix=Loop --outfile=startupschool/loopoptions.go 'limit:int' 'pause:time.Duration'
 
 type LoopOption func(*loopOptionImpl)
 
 type LoopOptions interface {
 	Limit() int
+	Pause() time.Duration
 }
 
 func LoopLimit(limit int) LoopOption {
@@ -14,11 +17,19 @@ func LoopLimit(limit int) LoopOption {
 	}
 }
 
-type loopOptionImpl struct {
-	limit int
+func LoopPause(pause time.Duration) LoopOption {
+	return func(opts *loopOptionImpl) {
+		opts.pause = pause
+	}
 }
 
-func (l *loopOptionImpl) Limit() int { return l.limit }
+type loopOptionImpl struct {
+	limit int
+	pause time.Duration
+}
+
+func (l *loopOptionImpl) Limit() int           { return l.limit }
+func (l *loopOptionImpl) Pause() time.Duration { return l.pause }
 
 func makeLoopOptionImpl(opts ...LoopOption) *loopOptionImpl {
 	res := &loopOptionImpl{}
