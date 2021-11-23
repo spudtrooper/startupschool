@@ -9,7 +9,7 @@ import (
 	"github.com/tebeka/selenium"
 )
 
-func (b *bot) Login(loginOpts ...LoginOption) (func(), error) {
+func (b *bot) Login(dataDir string, loginOpts ...LoginOption) (func(), error) {
 	opts := makeLoginOptionImpl(loginOpts...)
 
 	wd, cancel, err := goutilselenium.MakeWebDriver(goutilselenium.MakeWebDriverOptions{
@@ -20,14 +20,14 @@ func (b *bot) Login(loginOpts ...LoginOption) (func(), error) {
 		return cancel, err
 	}
 
-	if err := b.login(wd); err != nil {
+	if err := b.login(wd, dataDir); err != nil {
 		return cancel, err
 	}
 
 	return cancel, nil
 }
 
-func (b *bot) login(wd selenium.WebDriver) error {
+func (b *bot) login(wd selenium.WebDriver, dataDir string) error {
 	log.Printf("logging in...")
 
 	if err := wd.Get("https://account.ycombinator.com/?continue=https%3A%2F%2Fwww.startupschool.org%2Fusers%2Fsign_in"); err != nil {
@@ -94,7 +94,7 @@ func (b *bot) login(wd selenium.WebDriver) error {
 
 	b.wd = wd
 
-	d, err := makeData()
+	d, err := makeData(dataDir)
 	if err != nil {
 		return err
 	}

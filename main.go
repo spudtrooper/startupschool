@@ -24,10 +24,9 @@ func realMain() error {
 		return err
 	}
 	bot := startupschool.MakeBot(*creds)
-	cancel, err := bot.Login(
+	cancel, err := bot.Login(*data,
 		startupschool.LoginSeleniumVerbose(*seleniumVerbose),
-		startupschool.LoginSeleniumHead(*seleniumHead),
-		startupschool.LoginData(*data))
+		startupschool.LoginSeleniumHead(*seleniumHead))
 	if err != nil {
 		return err
 	}

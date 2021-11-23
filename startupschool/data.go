@@ -10,15 +10,11 @@ import (
 	"github.com/spudtrooper/goutil/io"
 )
 
-const (
-	dataDir = "data"
-)
-
 type data struct {
 	dir string
 }
 
-func makeData() (*data, error) {
+func makeData(dataDir string) (*data, error) {
 	dir, err := io.MkdirAll(dataDir)
 	if err != nil {
 		return nil, err

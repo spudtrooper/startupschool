@@ -2,4 +2,4 @@
 
 set -e
 
-go run report.go "$@"
+go run report.go --data=../startupschooldata/data "$@"

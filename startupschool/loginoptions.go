@@ -1,13 +1,12 @@
 package startupschool
 
-// genopts --opt_type=LoginOption --prefix=Login --outfile=startupschool/loginoptions.go 'seleniumVerbose' 'seleniumHead' 'data:string'
+// genopts --opt_type=LoginOption --prefix=Login --outfile=startupschool/loginoptions.go 'seleniumVerbose' 'seleniumHead'
 
 type LoginOption func(*loginOptionImpl)
 
 type LoginOptions interface {
 	SeleniumVerbose() bool
 	SeleniumHead() bool
-	Data() string
 }
 
 func LoginSeleniumVerbose(seleniumVerbose bool) LoginOption {
@@ -22,21 +21,13 @@ func LoginSeleniumHead(seleniumHead bool) LoginOption {
 	}
 }
 
-func LoginData(data string) LoginOption {
-	return func(opts *loginOptionImpl) {
-		opts.data = data
-	}
-}
-
 type loginOptionImpl struct {
 	seleniumVerbose bool
 	seleniumHead    bool
-	data            string
 }
 
 func (l *loginOptionImpl) SeleniumVerbose() bool { return l.seleniumVerbose }
 func (l *loginOptionImpl) SeleniumHead() bool    { return l.seleniumHead }
-func (l *loginOptionImpl) Data() string          { return l.data }
 
 func makeLoginOptionImpl(opts ...LoginOption) *loginOptionImpl {
 	res := &loginOptionImpl{}
