@@ -13,6 +13,10 @@ func (b *bot) Backfill(backfillOpts ...BackfillOption) error {
 		return err
 	}
 	for _, c := range cands {
+		if !c.NeedsBackfill() {
+			log.Printf("skipping %v", c)
+			continue
+		}
 		c, err := b.lookUp(c.URI)
 		if err != nil {
 			return err

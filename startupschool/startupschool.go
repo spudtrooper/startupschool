@@ -8,13 +8,22 @@ import (
 )
 
 type candidate struct {
-	URI          string
-	ProfileURI   string
-	Name         string
-	LinkedInUri  string
-	Intro        string
-	CompanyLinks []link
-	CompanyText  string
+	URI           string
+	ProfileURI    string
+	Name          string
+	Location      string
+	LinkedInUri   string
+	Intro         string
+	CompanyLinks  []link
+	CompanyText   string
+	UpdatedMillis int64
+}
+
+func (c *candidate) NeedsBackfill() bool {
+	if c.Location == "" {
+		return true
+	}
+	return false
 }
 
 type link struct {

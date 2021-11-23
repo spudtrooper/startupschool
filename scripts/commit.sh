@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 msg="$@"
 if [[ -z "$msg" ]]; then
     msg="update $(date)"

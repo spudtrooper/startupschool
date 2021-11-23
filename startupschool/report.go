@@ -10,14 +10,8 @@ import (
 	"github.com/spudtrooper/goutil/html"
 )
 
-func Report() error {
-	d, err := makeData()
-	if err != nil {
-		return err
-	}
-	dir := d.Dir()
-
-	cands, err := findExistingCandidates(dir)
+func Report(dataDir string) error {
+	cands, err := findExistingCandidates(dataDir)
 	if err != nil {
 		return err
 	}
@@ -29,19 +23,26 @@ func Report() error {
 	head := html.TableRowData{
 		"IMAGE",
 		"NAME",
+		"LOCATION",
 		"COMPANY",
 		"INTRO",
 		"LINKEDIN",
 	}
 	var rows []html.TableRowData
 	for _, c := range cands {
+		image := fmt.Sprintf(`<a href="%s" target="_"><img style="max-width:100px" src="%s"/></a>`, c.ProfileURI, c.ProfileURI)
+		name := fmt.Sprintf(`<a href="%s" target="_">%s</a>`, c.URI, c.Name)
+		location := c.Location
 		companyHTML := html.Linkify(c.CompanyText)
+		intro := c.Intro
+		linkedIn := fmt.Sprintf(`<a href="%s" target="_">LinkedIn</a>`, c.LinkedInUri)
 		row := html.TableRowData{
-			fmt.Sprintf(`<a href="%s" target="_"><img style="max-width:100px" src="%s"/></a>`, c.ProfileURI, c.ProfileURI),
-			fmt.Sprintf(`<a href="%s" target="_">%s</a>`, c.URI, c.Name),
+			image,
+			name,
+			location,
 			companyHTML,
-			c.Intro,
-			fmt.Sprintf(`<a href="%s" target="_">LinkedIn</a>`, c.LinkedInUri),
+			intro,
+			linkedIn,
 		}
 		rows = append(rows, row)
 	}
@@ -57,7 +58,7 @@ func Report() error {
 	if err != nil {
 		return err
 	}
-	outFile := path.Join(dir, "html", "index.html")
+	outFile := path.Join(dataDir, "html", "index.html")
 	if err := ioutil.WriteFile(outFile, []byte(html), 0755); err != nil {
 		return err
 	}

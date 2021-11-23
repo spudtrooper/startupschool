@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/tebeka/selenium"
 )
@@ -32,6 +33,17 @@ func (b *bot) lookUp(uri string) (*candidate, error) {
 		name = text
 		return true, nil
 	})
+
+	ps, err := b.wd.FindElements(selenium.ByTagName, "p")
+	if err != nil {
+		return nil, err
+	}
+	locationP := ps[0]
+	locationText, err := locationP.Text()
+	if err != nil {
+		return nil, err
+	}
+	location := strings.Split(locationText, "|")[0]
 
 	var linkedInUri string
 	as, err := b.wd.FindElements(selenium.ByTagName, "a")
@@ -128,14 +140,17 @@ func (b *bot) lookUp(uri string) (*candidate, error) {
 		}
 	}
 
+	updatedMillis := time.Now().UnixMilli()
 	c := &candidate{
-		Name:         name,
-		LinkedInUri:  linkedInUri,
-		Intro:        intro,
-		URI:          url,
-		ProfileURI:   profileURI,
-		CompanyLinks: companyLinks,
-		CompanyText:  companyText,
+		Name:          name,
+		Location:      location,
+		LinkedInUri:   linkedInUri,
+		Intro:         intro,
+		URI:           url,
+		ProfileURI:    profileURI,
+		CompanyLinks:  companyLinks,
+		CompanyText:   companyText,
+		UpdatedMillis: updatedMillis,
 	}
 	return c, nil
 }
