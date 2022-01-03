@@ -30,3 +30,9 @@ Tool to scrape startupschool.org founder matching (because I'd prefer to read th
     ```bash
     open data/html/index.html
     ```
+
+5. Find all the linkedin profiles for pending candidates
+
+    ```bash
+    ./scripts/find_linkedins.sh
+    ```
