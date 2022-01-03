@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"strings"
 
 	"github.com/spudtrooper/startupschool/startupschool"
@@ -16,6 +17,7 @@ var (
 	data            = flag.String("data", "data", "directory to store data")
 	backfill        = flag.Bool("backfill", false, "Backfill existing entries")
 	pause           = flag.Duration("pause", 0, "pause time between requests")
+	findLinkedIns   = flag.Bool("find_linkedins", false, "if true we will search for linkedin profiles")
 )
 
 func realMain() error {
@@ -32,13 +34,23 @@ func realMain() error {
 	}
 	defer cancel()
 
+	if *findLinkedIns {
+		uris, err := bot.FindLinkedInProfiles(startupschool.FindLinkedInProfilesPause(*pause))
+		if err != nil {
+			return err
+		}
+		for _, uri := range uris {
+			fmt.Println(uri)
+		}
+	}
+
 	if *uris != "" {
 		uris := strings.Split(*uris, ",")
-		if err := bot.SearchURIs(uris,
-			startupschool.SearchURIsPause(*pause)); err != nil {
+		if err := bot.SearchURIs(uris, startupschool.SearchURIsPause(*pause)); err != nil {
 			return err
 		}
 	}
+
 	if *loop > 0 {
 		if err := bot.Loop(
 			startupschool.LoopLimit(*loop),
@@ -46,9 +58,9 @@ func realMain() error {
 			return err
 		}
 	}
+
 	if *backfill {
-		if err := bot.Backfill(
-			startupschool.BackfillPause(*pause)); err != nil {
+		if err := bot.Backfill(startupschool.BackfillPause(*pause)); err != nil {
 			return err
 		}
 	}
