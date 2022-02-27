@@ -9,15 +9,16 @@ import (
 )
 
 var (
-	credentialsFile = flag.String("credentials_file", ".credentials.json", "File with credentials")
-	seleniumVerbose = flag.Bool("selenium_verbose", false, "verbose selenium logging")
-	seleniumHead    = flag.Bool("selenium_head", false, "Take screenshots withOUT headless chrome")
-	loop            = flag.Int("loop", 0, "max number of times to check next candidate")
-	uris            = flag.String("uris", "", "comma-delimited list of URIs to search")
-	data            = flag.String("data", "data", "directory to store data")
-	backfill        = flag.Bool("backfill", false, "Backfill existing entries")
-	pause           = flag.Duration("pause", 0, "pause time between requests")
-	findLinkedIns   = flag.Bool("find_linkedins", false, "if true we will search for linkedin profiles")
+	credentialsFile    = flag.String("credentials_file", ".credentials.json", "File with credentials")
+	seleniumVerbose    = flag.Bool("selenium_verbose", false, "verbose selenium logging")
+	seleniumHead       = flag.Bool("selenium_head", false, "Take screenshots withOUT headless chrome")
+	loop               = flag.Int("loop", 0, "max number of times to check next candidate")
+	uris               = flag.String("uris", "", "comma-delimited list of URIs to search")
+	data               = flag.String("data", "data", "directory to store data")
+	backfill           = flag.Bool("backfill", false, "Backfill existing entries")
+	pause              = flag.Duration("pause", 0, "pause time between requests")
+	findLinkedIns      = flag.Bool("find_linkedins", false, "if true we will search for linkedin profiles")
+	findLinkedInsStart = flag.Int("find_linkedins_start", 0, "the start index for finding linkedins")
 )
 
 func realMain() error {
@@ -35,7 +36,10 @@ func realMain() error {
 	defer cancel()
 
 	if *findLinkedIns {
-		uris, err := bot.FindLinkedInProfiles(startupschool.FindLinkedInProfilesPause(*pause))
+		uris, err := bot.FindLinkedInProfiles(
+			startupschool.FindLinkedInProfilesPause(*pause),
+			startupschool.FindLinkedInProfilesStart(*findLinkedInsStart),
+		)
 		if err != nil {
 			return err
 		}

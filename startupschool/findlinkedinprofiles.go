@@ -1,11 +1,12 @@
 package startupschool
 
 import (
+	"fmt"
 	"log"
 	"time"
 
 	"github.com/pkg/errors"
-	goutilselenium "github.com/spudtrooper/goutil/selenium"
+	"github.com/spudtrooper/goutil/or"
 	"github.com/tebeka/selenium"
 )
 
@@ -20,7 +21,8 @@ func (b *bot) FindLinkedInProfiles(fliOpts ...FindLinkedInProfilesOption) ([]Lin
 
 	// TODO: Can't figure out how to dismiss the modal, so request the main page N times
 	var linkedInUris []LinkedInURI
-	for i := 0; ; i++ {
+	start := or.Int(opts.Start(), 0)
+	for i := start; ; i++ {
 		uri, err := b.findLinkedInProfile(i)
 		if err != nil {
 			return nil, err
@@ -39,25 +41,49 @@ func (b *bot) FindLinkedInProfiles(fliOpts ...FindLinkedInProfilesOption) ([]Lin
 	return linkedInUris, nil
 }
 
+func (b *bot) waitForElementsByClassName(className string) ([]selenium.WebElement, error) {
+	var res []selenium.WebElement
+	var cnt int
+	b.wd.Wait(func(wd selenium.WebDriver) (bool, error) {
+		log.Printf("waiting for element with className %s  [%d] ...", className, cnt+1)
+		cnt++
+		els, err := wd.FindElements(selenium.ByCSSSelector, className)
+		if err != nil {
+			return false, err
+		}
+		if len(els) > 0 {
+			res = els
+			return true, nil
+		}
+		return false, nil
+	})
+	if res == nil {
+		return nil, fmt.Errorf("couldn't find div with className: %s", className)
+	}
+	return res, nil
+}
+
 func (b *bot) findLinkedInProfile(num int) (LinkedInURI, error) {
 	if err := b.wd.Get("https://www.startupschool.org/cofounder-matching"); err != nil {
 		return nilLinkedInURI, err
 	}
 
-	buttons, err := goutilselenium.WaitForElements(b.wd, "button", "Respond to invite")
+	profiles, err := b.waitForElementsByClassName(".css-e8vpit.egpbwzr2")
 	if err != nil {
 		return nilLinkedInURI, err
 	}
 
-	if len(buttons) == 0 {
-		return nilLinkedInURI, errors.Errorf("no buttons")
+	log.Printf("have %d profiles", len(profiles))
+
+	if len(profiles) == 0 {
+		return nilLinkedInURI, errors.Errorf("no profiles")
 	}
 
-	if num >= len(buttons) {
+	if num >= len(profiles) {
 		return nilLinkedInURI, nil
 	}
 
-	if err := buttons[num].Click(); err != nil {
+	if err := profiles[num].Click(); err != nil {
 		return nilLinkedInURI, err
 	}
 

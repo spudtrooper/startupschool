@@ -2,4 +2,4 @@
 
 set -e
 
-go run main.go --find_linkedins
+go run main.go --find_linkedins "$@"
