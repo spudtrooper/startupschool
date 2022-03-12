@@ -2,7 +2,7 @@ package startupschool
 
 import "time"
 
-//go:generate genopts --opt_type=BackfillOption --prefix=Backfill --outfile=backfilloptions.go "pause:time.Duration"
+//go:generate genopts --prefix=Backfill --outfile=backfilloptions.go "pause:time.Duration"
 
 type BackfillOption func(*backfillOptionImpl)
 
@@ -13,6 +13,11 @@ type BackfillOptions interface {
 func BackfillPause(pause time.Duration) BackfillOption {
 	return func(opts *backfillOptionImpl) {
 		opts.pause = pause
+	}
+}
+func BackfillPauseFlag(pause *time.Duration) BackfillOption {
+	return func(opts *backfillOptionImpl) {
+		opts.pause = *pause
 	}
 }
 

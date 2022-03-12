@@ -2,7 +2,7 @@ package startupschool
 
 import "time"
 
-//go:generate genopts --opt_type=SearchURIsOption --prefix=SearchURIs --outfile=searchurisoptions.go "pause:time.Duration"
+//go:generate genopts --prefix=SearchURIs --outfile=searchurisoptions.go "pause:time.Duration"
 
 type SearchURIsOption func(*searchURIsOptionImpl)
 
@@ -13,6 +13,11 @@ type SearchURIsOptions interface {
 func SearchURIsPause(pause time.Duration) SearchURIsOption {
 	return func(opts *searchURIsOptionImpl) {
 		opts.pause = pause
+	}
+}
+func SearchURIsPauseFlag(pause *time.Duration) SearchURIsOption {
+	return func(opts *searchURIsOptionImpl) {
+		opts.pause = *pause
 	}
 }
 

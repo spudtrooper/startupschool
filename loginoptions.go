@@ -1,6 +1,6 @@
 package startupschool
 
-//go:generate genopts --opt_type=LoginOption --prefix=Login --outfile=loginoptions.go "seleniumVerbose" "seleniumHead"
+//go:generate genopts --prefix=Login --outfile=loginoptions.go "seleniumVerbose" "seleniumHead"
 
 type LoginOption func(*loginOptionImpl)
 
@@ -14,10 +14,20 @@ func LoginSeleniumVerbose(seleniumVerbose bool) LoginOption {
 		opts.seleniumVerbose = seleniumVerbose
 	}
 }
+func LoginSeleniumVerboseFlag(seleniumVerbose *bool) LoginOption {
+	return func(opts *loginOptionImpl) {
+		opts.seleniumVerbose = *seleniumVerbose
+	}
+}
 
 func LoginSeleniumHead(seleniumHead bool) LoginOption {
 	return func(opts *loginOptionImpl) {
 		opts.seleniumHead = seleniumHead
+	}
+}
+func LoginSeleniumHeadFlag(seleniumHead *bool) LoginOption {
+	return func(opts *loginOptionImpl) {
+		opts.seleniumHead = *seleniumHead
 	}
 }
 
