@@ -1,6 +1,6 @@
 module github.com/spudtrooper/startupschool
 
-go 1.17
+go 1.18
 
 replace github.com/spudtrooper/goutil => ../goutil
 
